@@ -17,6 +17,7 @@ function finish {
 }
 trap finish EXIT
 
+chmod 600 ./snakeoil/id_ed25519
 ssh-add ./snakeoil/id_ed25519
 
 # Add host key to known hosts & wait for ssh availability
