@@ -2,11 +2,8 @@
 #! nix-shell shell.nix -i bash
 set -euo pipefail
 
-echo "WHOAMI?"
-whoami
-
-mkdir -p /etc/containers || true
-cp -a ~/.config/containers/* /etc/containers/ || true
+sudo mkdir -p /etc/containers || true
+sudo cp -a ~/.config/containers/* /etc/containers/ || true
 
 nix-build container/
 podman import result/tarball/nixos-system-*.tar.xz nixos-docker
