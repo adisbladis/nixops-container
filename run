@@ -22,7 +22,7 @@ while true; do
     ssh -o StrictHostKeyChecking=accept-new root@127.0.0.1 -p 2024 true && break
 
     if test $(date +%s) -ge $timeout; then
-        echo "Timeout reached"
+        echo "Timeout reached!"
         exit 1
     fi
 
