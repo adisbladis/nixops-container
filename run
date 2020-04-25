@@ -8,10 +8,6 @@ sudo cp -a ~/.config/containers/* /etc/containers/ || true
 nix-build container/
 podman import result/tarball/nixos-system-*.tar.xz nixos-docker
 
-podman run --privileged --publish=2024:22 -it nixos-docker /init
-
-exit 0
-
 eval $(ssh-agent)
 container_id=$(podman run --privileged --publish=2024:22 -it --detach nixos-docker /init)
 function finish {
