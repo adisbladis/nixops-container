@@ -1,0 +1,33 @@
+#!/usr/bin/env nix-shell
+#! nix-shell shell.nix -i bash
+set -euo pipefail
+
+nix-build container/
+podman import result/tarball/nixos-system-*.tar.xz nixos-docker
+
+eval $(ssh-agent)
+container_id=$(podman run --privileged --publish=2024:22 -it --detach nixos-docker /init)
+function finish {
+    podman kill "$container_id"
+    podman rm -f "$container_id"
+    kill "$SSH_AGENT_PID"
+}
+trap finish EXIT
+
+ssh-add ./snakeoil/id_ed25519
+
+# Add host key to known hosts & wait for ssh availability
+timeout=$(expr $(date +%s) + 60)
+while true; do
+    ssh -o StrictHostKeyChecking=accept-new root@127.0.0.1 -p 2024 true && break
+
+    if test $(date +%s) -ge $timeout; then
+        echo "Timeout reached"
+        exit 1
+    fi
+
+    sleep 3
+done
+
+nixops create deployment/deployment.nix
+nixops deploy
