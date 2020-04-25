@@ -17,6 +17,8 @@ function finish {
 }
 trap finish EXIT
 
+podman exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
+
 chmod 600 ./snakeoil/id_ed25519
 ssh-add ./snakeoil/id_ed25519
 
