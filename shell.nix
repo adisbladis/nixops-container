@@ -1,6 +1,13 @@
-{ pkgs ? import <nixpkgs> {} }:
+{ }:
 
 let
+  rev = "9d0b4c05ed149ac2dc218a891e653a9039059859";
+
+  nixpkgs = builtins.fetchTarball {
+    url = "https://github.com/NixOS/nixpkgs/archive/${rev}.tar.gz";
+  };
+
+  pkgs = import nixpkgs {};
 
   # To use this shell.nix on NixOS your user needs to be configured as such:
   # users.extraUsers.adisbladis = {
@@ -45,6 +52,7 @@ in pkgs.mkShell {
 
   shellHook = ''
     # Install required configuration
+    export NIX_PATH=nixpkgs=${nixpkgs}
     ${podmanSetupScript}
   '';
 
