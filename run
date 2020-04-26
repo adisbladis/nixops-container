@@ -8,12 +8,8 @@ sudo cp -a ~/.config/containers/* /etc/containers/ || true
 nix-build container/
 podman import result/tarball/nixos-system-*.tar.xz nixos-docker
 
-podman run --privileged --publish=2024:22 -it nixos-docker /init
-
-exit 0
-
 eval $(ssh-agent)
-container_id=$(podman run --privileged --publish=2024:22 -it --detach nixos-docker /init)
+container_id=$(podman run --cgroup-manager=cgroupfs --privileged --publish=2024:22 -it --detach nixos-docker /init)
 function finish {
     podman kill "$container_id"
     podman rm -f "$container_id"
@@ -21,7 +17,11 @@ function finish {
 }
 trap finish EXIT
 
-podman exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
+while true; do
+    podman exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
+    sleep 1
+    ps -p $! > /dev/null && break
+done
 
 chmod 600 ./snakeoil/id_ed25519
 ssh-add ./snakeoil/id_ed25519

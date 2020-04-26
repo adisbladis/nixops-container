@@ -42,6 +42,7 @@ in pkgs.mkShell {
   buildInputs = [
     pkgs.podman  # Docker compat
     pkgs.runc  # Container runtime
+    pkgs.crun # Default container runtime (cgroups v2)
     pkgs.conmon  # Container runtime monitor
     pkgs.skopeo  # Interact with container registry
     pkgs.slirp4netns  # User-mode networking for unprivileged namespaces
