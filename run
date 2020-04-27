@@ -1,27 +1,27 @@
 #!/usr/bin/env nix-shell
 #! nix-shell shell.nix -i bash
-set -euo pipefail
+set -euxo pipefail
 
 sudo mkdir -p /etc/containers || true
 sudo cp -a ~/.config/containers/* /etc/containers/ || true
 
 nix-build container/
-podman import result/tarball/nixos-system-*.tar.xz nixos-docker
+docker import result/tarball/nixos-system-*.tar.xz nixos-docker
 
 # Debug run
-podman run --cgroup-manager=cgroupfs --privileged --publish=2024:22 -it nixos-docker /init
+docker run --privileged --publish=2024:22 -it nixos-docker /init
 
 eval $(ssh-agent)
-container_id=$(podman run --cgroup-manager=cgroupfs --privileged --publish=2024:22 -it --detach nixos-docker /init)
+container_id=$(docker run --privileged --publish=2024:22 -it --detach nixos-docker /init)
 function finish {
-    podman kill "$container_id"
-    podman rm -f "$container_id"
+    docker kill "$container_id"
+    docker rm -f "$container_id"
     kill "$SSH_AGENT_PID"
 }
 trap finish EXIT
 
 while true; do
-    podman exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
+    docker exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
     sleep 1
     ps -p $! > /dev/null && break
 done
