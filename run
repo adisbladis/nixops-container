@@ -17,12 +17,6 @@ function finish {
 }
 trap finish EXIT
 
-while true; do
-    docker exec -it "$container_id" /run/current-system/sw/bin/journalctl -f &
-    sleep 1
-    ps -p $! > /dev/null && break
-done
-
 chmod 600 ./snakeoil/id_ed25519
 ssh-add ./snakeoil/id_ed25519
 
