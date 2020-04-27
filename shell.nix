@@ -1,10 +1,10 @@
 { }:
 
 let
-  rev = "9d0b4c05ed149ac2dc218a891e653a9039059859";
+  rev = "nixos-unstable";
 
   nixpkgs = builtins.fetchTarball {
-    url = "https://github.com/NixOS/nixpkgs/archive/${rev}.tar.gz";
+    url = "https://github.com/NixOS/nixpkgs-channels/archive/${rev}.tar.gz";
   };
 
   pkgs = import nixpkgs {};
