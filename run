@@ -8,9 +8,6 @@ sudo cp -a ~/.config/containers/* /etc/containers/ || true
 nix-build container/
 docker import result/tarball/nixos-system-*.tar.xz nixos-docker
 
-# Debug run
-docker run --privileged --publish=2024:22 -it nixos-docker /init
-
 eval $(ssh-agent)
 container_id=$(docker run --privileged --publish=2024:22 -it --detach nixos-docker /init)
 function finish {
